@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>欢喜财税 — 创业无忧，欢喜相伴</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600;700;900&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{font-family:'Noto Sans SC',sans-serif;background:#0F0D0C;color:#F0EBE3;overflow-x:hidden;line-height:1.6;cursor:none}
+
+/* ── CUSTOM CURSOR ─────────────────────────── */
+.cursor{position:fixed;pointer-events:none;z-index:9999;mix-blend-mode:difference}
+.cursor-dot{width:8px;height:8px;background:#fff;border-radius:50%;transform:translate(-50%,-50%);transition:transform .1s}
+.cursor-ring{width:40px;height:40px;border:1px solid rgba(255,255,255,.4);border-radius:50%;transform:translate(-50%,-50%);transition:transform .08s,width .25s,height .25s,border-color .25s}
+.cursor-hover .cursor-ring{width:64px;height:64px;border-color:rgba(200,80,60,.6)}
+
+/* ── TOKENS ───────────────────────────────── */
+:root{
+  --ink:#0F0D0C;
+  --ink2:#1C1917;
+  --ink3:#2A2522;
+  --fg:#F0EBE3;
+  --fg2:#B5ADA4;
+  --fg3:#6B6560;
+  --red:#C8442A;
+  --red2:#A83420;
+  --red3:#E8C4B8;
+  --gold:#C9973A;
+  --gold2:#E8C97A;
+  --line:rgba(240,235,227,.08);
+  --line2:rgba(240,235,227,.14);
+  --serif:'Noto Serif SC',serif;
+  --sans:'Noto Sans SC',sans-serif;
+  --ease:cubic-bezier(.16,1,.3,1);
+  --ease2:cubic-bezier(.4,0,.2,1);
+}
+
+/* ── NAV ──────────────────────────────────── */
+nav{
+  position:fixed;inset:0 0 auto;z-index:800;
+  height:68px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 5%;
+  border-bottom:1px solid transparent;
+  transition:border-color .4s,background .4s,backdrop-filter .4s;
+}
+nav.scrolled{
+  background:rgba(15,13,12,.88);
+  backdrop-filter:blur(24px);
+  border-color:var(--line);
+}
+.nav-logo{display:flex;align-items:center;gap:12px;text-decoration:none}
+.nav-logo-mark{
+  width:36px;height:36px;border-radius:9px;
+  background:var(--red);display:flex;align-items:center;justify-content:center;
+  font-family:var(--serif);font-size:15px;font-weight:700;color:#fff;
+  transition:transform .3s var(--ease),background .3s;
+}
+.nav-logo:hover .nav-logo-mark{transform:rotate(-8deg);background:var(--red2)}
+.nav-logo-text{font-family:var(--serif);font-size:18px;font-weight:700;letter-spacing:.1em;color:var(--fg)}
+
+/* dropdown nav */
+.nav-menu{display:flex;align-items:center;gap:4px;list-style:none}
+.nav-item{position:relative}
+.nav-link{
+  display:flex;align-items:center;gap:4px;
+  padding:8px 16px;border-radius:6px;
+  font-size:13px;font-weight:400;letter-spacing:.04em;color:var(--fg2);
+  transition:color .2s,background .2s;text-decoration:none;
+  cursor:none;
+}
+.nav-link:hover,.nav-item:hover>.nav-link{color:var(--fg);background:rgba(240,235,227,.06)}
+.nav-link svg{width:10px;height:10px;transition:transform .25s var(--ease2)}
+.nav-item:hover>.nav-link svg{transform:rotate(180deg)}
+
+/* dropdown panel */
+.nav-dropdown{
+  position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);
+  background:#1C1917;border:1px solid var(--line2);border-radius:14px;
+  padding:8px;min-width:220px;
+  opacity:0;visibility:hidden;transform:translateX(-50%) translateY(-8px);
+  transition:opacity .25s var(--ease),visibility .25s,transform .25s var(--ease);
+  box-shadow:0 24px 64px rgba(0,0,0,.5);
+}
+.nav-item:hover .nav-dropdown{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0)}
+.nav-dd-item{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 14px;border-radius:8px;
+  font-size:13px;color:var(--fg2);
+  transition:background .2s,color .2s;text-decoration:none;
+  cursor:none;
+}
+.nav-dd-item:hover{background:rgba(240,235,227,.06);color:var(--fg)}
+.nav-dd-icon{
+  width:30px;height:30px;border-radius:7px;
+  background:rgba(240,235,227,.06);display:flex;align-items:center;justify-content:center;
+  font-size:13px;flex-shrink:0;
+}
+.nav-dd-sep{height:1px;background:var(--line);margin:4px 0}
+.nav-dd-label{padding:8px 14px 4px;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg3)}
+
+.nav-cta{
+  padding:9px 22px;border-radius:99px;
+  background:var(--red);color:#fff;
+  font-size:13px;font-weight:500;letter-spacing:.06em;
+  transition:background .2s,transform .2s,box-shadow .2s;
+  text-decoration:none;cursor:none;margin-left:12px;
+  box-shadow:0 0 0 0 rgba(200,68,42,0);
+}
+.nav-cta:hover{background:var(--red2);transform:translateY(-1px);box-shadow:0 8px 24px rgba(200,68,42,.35)}
+
+/* ── HERO ──────────────────────────────────── */
+.hero{
+  min-height:100svh;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding:0 5% 72px;
+  position:relative;overflow:hidden;
+}
+
+/* Background: dark with grid + radial glow */
+.hero-bg{
+  position:absolute;inset:0;z-index:0;
+  background:#0F0D0C;
+}
+.hero-grid{
+  position:absolute;inset:0;z-index:1;
+  background-image:
+    linear-gradient(var(--line) 1px,transparent 1px),
+    linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:60px 60px;
+  mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,#000 20%,transparent 100%);
+}
+.hero-glow{
+  position:absolute;z-index:2;
+  width:800px;height:800px;
+  background:radial-gradient(circle,rgba(200,68,42,.18) 0%,transparent 70%);
+  top:-200px;right:-100px;
+  pointer-events:none;
+}
+.hero-glow2{
+  position:absolute;z-index:2;
+  width:600px;height:600px;
+  background:radial-gradient(circle,rgba(201,151,58,.08) 0%,transparent 70%);
+  bottom:-100px;left:-100px;
+  pointer-events:none;
+}
+
+/* Large decorative character */
+.hero-char{
+  position:absolute;z-index:2;
+  right:4%;top:50%;transform:translateY(-56%);
+  font-family:var(--serif);font-size:clamp(280px,28vw,520px);font-weight:900;
+  line-height:1;letter-spacing:-.05em;
+  background:linear-gradient(160deg,rgba(200,68,42,.18) 0%,rgba(200,68,42,.04) 60%,transparent 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  user-select:none;pointer-events:none;
+  animation:charFloat 8s ease-in-out infinite;
+}
+@keyframes charFloat{0%,100%{transform:translateY(-56%)}50%{transform:translateY(-53%)}}
+
+.hero-content{position:relative;z-index:3;max-width:760px}
+
+.hero-kicker{
+  display:inline-flex;align-items:center;gap:10px;
+  margin-bottom:32px;
+  font-size:11px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--red3);
+}
+.hero-kicker-dot{width:5px;height:5px;background:var(--red);border-radius:50%;animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(200,68,42,.6)}50%{box-shadow:0 0 0 8px rgba(200,68,42,0)}}
+
+.hero-h1{
+  font-family:var(--serif);
+  font-size:clamp(52px,8vw,110px);
+  font-weight:900;line-height:.95;letter-spacing:-.01em;
+  color:var(--fg);
+  margin-bottom:32px;
+}
+.hero-h1 .line2{
+  display:block;
+  background:linear-gradient(90deg,var(--red) 0%,var(--gold) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+
+.hero-bottom{
+  display:flex;align-items:flex-end;justify-content:space-between;
+  gap:32px;flex-wrap:wrap;
+}
+.hero-desc{
+  font-size:15px;font-weight:300;color:var(--fg2);
+  line-height:1.9;max-width:400px;
+}
+.hero-desc strong{font-weight:500;color:var(--fg)}
+.hero-actions{display:flex;align-items:center;gap:14px;flex-shrink:0;flex-wrap:wrap}
+.hero-btn-main{
+  padding:15px 36px;border-radius:99px;
+  background:var(--red);color:#fff;
+  font-size:14px;font-weight:500;letter-spacing:.08em;
+  transition:background .2s,box-shadow .2s,transform .2s;
+  text-decoration:none;cursor:none;
+  box-shadow:0 4px 32px rgba(200,68,42,.3);
+}
+.hero-btn-main:hover{background:var(--red2);box-shadow:0 8px 40px rgba(200,68,42,.45);transform:translateY(-2px)}
+.hero-btn-ghost{
+  padding:14px 30px;border-radius:99px;
+  border:1px solid var(--line2);color:var(--fg2);
+  font-size:14px;font-weight:300;letter-spacing:.06em;
+  transition:border-color .2s,color .2s,background .2s;
+  text-decoration:none;cursor:none;
+}
+.hero-btn-ghost:hover{border-color:rgba(240,235,227,.3);color:var(--fg);background:rgba(240,235,227,.04)}
+
+/* Scroll indicator */
+.hero-scroll{
+  position:absolute;bottom:32px;left:50%;transform:translateX(-50%);
+  z-index:3;display:flex;flex-direction:column;align-items:center;gap:8px;
+}
+.scroll-text{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--fg3)}
+.scroll-line{
+  width:1px;height:40px;background:linear-gradient(to bottom,var(--fg3),transparent);
+  animation:scrollAnim 2s ease-in-out infinite;
+}
+@keyframes scrollAnim{0%{opacity:1;transform:scaleY(1) translateY(0)}100%{opacity:0;transform:scaleY(.5) translateY(20px)}}
+
+/* ── TICKER ────────────────────────────────── */
+.ticker{
+  background:var(--red);overflow:hidden;padding:14px 0;
+  border-top:1px solid rgba(255,255,255,.1);
+  border-bottom:1px solid rgba(255,255,255,.1);
+}
+.ticker-track{
+  display:flex;width:max-content;
+  animation:ticker 25s linear infinite;
+}
+.ticker-track:hover{animation-play-state:paused}
+.ticker-item{
+  display:flex;align-items:center;gap:0;
+  padding:0 40px;
+  font-family:var(--serif);font-size:14px;font-weight:600;
+  letter-spacing:.1em;color:rgba(255,255,255,.6);
+  white-space:nowrap;
+}
+.ticker-sep{
+  color:rgba(255,255,255,.25);
+  font-size:12px;margin:0 16px;
+}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ── SECTIONS ──────────────────────────────── */
+.section{padding:120px 5%}
+.section-warm{background:#141210}
+.section-surface{background:var(--ink2)}
+
+/* heading system */
+.eyebrow{
+  display:flex;align-items:center;gap:12px;
+  font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--red);margin-bottom:20px;
+}
+.eyebrow::before{content:'';width:28px;height:1px;background:var(--red);flex-shrink:0}
+.sh{
+  font-family:var(--serif);
+  font-size:clamp(36px,4.5vw,56px);
+  font-weight:700;line-height:1.15;letter-spacing:.01em;
+  color:var(--fg);margin-bottom:16px;
+}
+.sh em{font-style:normal;color:var(--red)}
+.sd{font-size:15px;font-weight:300;color:var(--fg2);max-width:460px;line-height:1.9}
+.section-head{margin-bottom:64px}
+
+/* ── SERVICE GRID ──────────────────────────── */
+/* Bento-style: 3 cols, rows have different heights */
+.bento{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  grid-auto-rows:auto;
+  gap:14px;
+}
+.bento-card{
+  background:var(--ink3);
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:36px 32px;
+  position:relative;overflow:hidden;
+  transition:border-color .3s var(--ease),transform .35s var(--ease),box-shadow .35s var(--ease);
+  display:flex;flex-direction:column;gap:14px;
+}
+.bento-card:hover{
+  border-color:var(--line2);
+  transform:translateY(-6px);
+  box-shadow:0 32px 64px rgba(0,0,0,.4);
+}
+/* highlight bar on hover */
+.bento-card::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--red),var(--gold));
+  transform:scaleX(0);transform-origin:left;
+  transition:transform .35s var(--ease);
+}
+.bento-card:hover::after{transform:scaleX(1)}
+
+/* Featured spans 2 rows on the left */
+.bento-card.featured{
+  grid-row:span 2;
+  background:linear-gradient(145deg,#1A0E0B 0%,#2A1210 100%);
+  border-color:rgba(200,68,42,.3);
+}
+.bento-card.featured:hover{border-color:rgba(200,68,42,.5);box-shadow:0 32px 64px rgba(200,68,42,.12)}
+.bento-card.featured::after{background:linear-gradient(90deg,var(--red),#E87060)}
+
+/* Decorative bg char */
+.bento-char{
+  position:absolute;bottom:-20px;right:-10px;
+  font-family:var(--serif);font-size:120px;font-weight:900;
+  color:rgba(200,68,42,.07);line-height:1;
+  user-select:none;pointer-events:none;
+}
+
+.bc-num{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--fg3)}
+.bento-card.featured .bc-num{color:rgba(200,68,42,.5)}
+.bc-icon{
+  width:46px;height:46px;border-radius:12px;
+  background:rgba(240,235,227,.05);
+  display:flex;align-items:center;justify-content:center;font-size:20px;
+}
+.bento-card.featured .bc-icon{background:rgba(200,68,42,.15)}
+.bc-title{
+  font-family:var(--serif);font-size:20px;font-weight:700;
+  color:var(--fg);letter-spacing:.02em;line-height:1.3;
+}
+.bento-card.featured .bc-title{font-size:26px}
+.bc-desc{font-size:13px;font-weight:300;color:var(--fg2);line-height:1.85;flex:1}
+.bc-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto}
+.bc-tag{
+  padding:4px 10px;border-radius:99px;
+  background:rgba(240,235,227,.05);border:1px solid var(--line);
+  font-size:11px;color:var(--fg3);letter-spacing:.04em;
+}
+.bento-card.featured .bc-tag{background:rgba(200,68,42,.12);border-color:rgba(200,68,42,.2);color:var(--red3)}
+.bc-arrow{
+  width:36px;height:36px;border-radius:50%;
+  border:1px solid var(--line2);color:var(--fg2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;margin-top:auto;align-self:flex-start;
+  transition:background .2s,border-color .2s,color .2s,transform .2s;
+}
+.bento-card:hover .bc-arrow{background:var(--red);border-color:var(--red);color:#fff;transform:translate(2px,-2px)}
+
+/* ── NUMBERS ───────────────────────────────── */
+.nums-row{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  border:1px solid var(--line);border-radius:20px;overflow:hidden;
+}
+.num-cell{
+  padding:56px 40px;text-align:center;
+  border-right:1px solid var(--line);
+  position:relative;
+  transition:background .3s;
+}
+.num-cell:last-child{border-right:none}
+.num-cell:hover{background:rgba(240,235,227,.02)}
+.num-cell::before{
+  content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:1px;height:32px;
+  background:linear-gradient(to bottom,var(--red),transparent);
+}
+.num-n{
+  font-family:var(--serif);font-size:60px;font-weight:900;
+  line-height:1;letter-spacing:-.02em;
+  background:linear-gradient(135deg,var(--gold2),var(--gold));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:12px;
+}
+.num-sup{font-size:24px}
+.num-l{font-size:13px;color:var(--fg3);line-height:1.7;letter-spacing:.04em}
+
+/* ── PHILOSOPHY ────────────────────────────── */
+.phi-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start}
+
+/* Left: horizontal rule + text items */
+.phi-items{display:flex;flex-direction:column}
+.phi-item{
+  padding:28px 0 28px 0;
+  border-bottom:1px solid var(--line);
+  display:grid;grid-template-columns:32px 1fr;gap:24px;
+  transition:padding-left .25s var(--ease);
+}
+.phi-item:first-child{padding-top:0}
+.phi-item:last-child{border-bottom:none;padding-bottom:0}
+.phi-item:hover{padding-left:8px}
+.phi-idx{
+  font-family:var(--serif);font-size:11px;font-weight:600;
+  color:var(--fg3);letter-spacing:.12em;padding-top:4px;
+}
+.phi-t{font-size:15px;font-weight:500;color:var(--fg);margin-bottom:6px;letter-spacing:.02em}
+.phi-b{font-size:13px;font-weight:300;color:var(--fg2);line-height:1.85}
+
+/* Right: large quote block */
+.phi-quote{
+  background:linear-gradient(145deg,#1C1917 0%,#231F1C 100%);
+  border:1px solid var(--line2);border-radius:24px;
+  padding:48px 44px;position:relative;overflow:hidden;
+}
+.phi-quote::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--red),transparent);
+}
+.phi-qm{
+  font-family:Georgia,serif;font-size:96px;line-height:.7;
+  color:var(--red);opacity:.2;font-weight:700;
+  margin-bottom:16px;display:block;
+}
+.phi-qt{
+  font-family:var(--serif);font-size:19px;font-weight:600;
+  line-height:1.75;color:var(--fg);margin-bottom:20px;letter-spacing:.01em;
+}
+.phi-qt em{font-style:normal;color:var(--red)}
+.phi-qs{
+  font-size:14px;font-weight:300;color:var(--fg2);line-height:1.9;
+  padding-bottom:28px;border-bottom:1px solid var(--line);margin-bottom:28px;
+}
+.phi-qs em{font-style:normal;font-weight:500;color:var(--fg)}
+.phi-auth{display:flex;align-items:center;gap:14px}
+.phi-av{
+  width:44px;height:44px;border-radius:50%;
+  background:linear-gradient(135deg,rgba(200,68,42,.3),rgba(200,68,42,.1));
+  border:1px solid rgba(200,68,42,.3);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--serif);font-size:16px;font-weight:700;color:var(--red3);
+}
+.phi-aname{font-size:14px;font-weight:500;color:var(--fg)}
+.phi-arole{font-size:12px;color:var(--fg3)}
+
+/* Timeline */
+.tl{margin-top:28px;display:flex;flex-direction:column}
+.tl-row{
+  display:grid;grid-template-columns:52px 14px 1fr;
+  align-items:start;gap:0 14px;
+  padding:16px 0;border-bottom:1px solid var(--line);
+}
+.tl-row:last-child{border-bottom:none;padding-bottom:0}
+.tl-y{font-family:var(--serif);font-size:12px;font-weight:600;color:var(--red);letter-spacing:.04em;padding-top:3px;text-align:right}
+.tl-dot{width:8px;height:8px;border-radius:50%;background:var(--red);margin-top:5px}
+.tl-t{font-size:13px;font-weight:300;color:var(--fg2);line-height:1.65}
+
+/* ── CLIENTS ───────────────────────────────── */
+.clients-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:14px;
+}
+.client-tile{
+  border:1px solid var(--line);border-radius:20px;
+  padding:36px 28px;text-align:center;
+  position:relative;overflow:hidden;
+  transition:border-color .3s,transform .3s var(--ease),box-shadow .3s;
+  background:var(--ink3);
+}
+.client-tile:hover{
+  border-color:var(--line2);transform:translateY(-5px);
+  box-shadow:0 24px 56px rgba(0,0,0,.4);
+}
+.client-tile::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(200,68,42,.06),transparent);
+  opacity:0;transition:opacity .3s;
+}
+.client-tile:hover::after{opacity:1}
+.c-em{font-size:36px;margin-bottom:16px;display:block;line-height:1}
+.c-name{font-family:var(--serif);font-size:15px;font-weight:700;color:var(--fg);margin-bottom:8px;letter-spacing:.02em}
+.c-desc{font-size:12px;font-weight:300;color:var(--fg3);line-height:1.75}
+
+/* ── CASES ─────────────────────────────────── */
+.cases-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.case-card{
+  border:1px solid var(--line);border-radius:20px;
+  padding:32px 28px;display:flex;flex-direction:column;gap:14px;
+  background:var(--ink3);
+  transition:border-color .3s,transform .3s var(--ease),box-shadow .3s;
+}
+.case-card:hover{border-color:var(--line2);transform:translateY(-5px);box-shadow:0 24px 56px rgba(0,0,0,.4)}
+.case-pill{
+  display:inline-flex;align-items:center;width:fit-content;
+  padding:4px 12px;border-radius:99px;
+  background:rgba(200,68,42,.12);border:1px solid rgba(200,68,42,.2);
+  font-size:11px;font-weight:600;color:var(--red3);letter-spacing:.08em;
+}
+.case-t{font-family:var(--serif);font-size:16px;font-weight:700;color:var(--fg);line-height:1.5;letter-spacing:.01em}
+.case-b{font-size:13px;font-weight:300;color:var(--fg2);line-height:1.85;flex:1}
+.case-ins{
+  padding:12px 16px;border-radius:10px;
+  background:rgba(240,235,227,.03);border-left:2px solid var(--red);
+  font-size:12px;color:var(--fg3);line-height:1.65;font-style:italic;
+}
+
+/* ── FAQ ────────────────────────────────────── */
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.faq-card{
+  border:1px solid var(--line);border-radius:16px;padding:28px 26px;
+  background:var(--ink3);transition:border-color .2s,background .2s;
+}
+.faq-card:hover{border-color:var(--line2);background:#231F1C}
+.faq-q{
+  display:flex;align-items:flex-start;gap:12px;
+  font-size:14px;font-weight:500;color:var(--fg);margin-bottom:12px;line-height:1.5;
+}
+.faq-badge{
+  min-width:22px;height:22px;border-radius:6px;
+  background:rgba(200,68,42,.15);border:1px solid rgba(200,68,42,.2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:700;color:var(--red3);letter-spacing:.06em;
+  flex-shrink:0;margin-top:1px;
+}
+.faq-a{font-size:13px;font-weight:300;color:var(--fg2);line-height:1.85;padding-left:34px}
+
+/* ── CTA ────────────────────────────────────── */
+.cta-wrap{
+  padding:120px 5%;text-align:center;
+  background:#0F0D0C;position:relative;overflow:hidden;
+}
+/* radial glow bg */
+.cta-glow{
+  position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse 70% 50% at 50% 50%,rgba(200,68,42,.14) 0%,transparent 70%);
+}
+.cta-grid-bg{
+  position:absolute;inset:0;pointer-events:none;
+  background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:60px 60px;
+  mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,#000 10%,transparent 100%);
+}
+.cta-wm{
+  position:absolute;bottom:-30px;left:50%;transform:translateX(-50%);
+  font-family:var(--serif);font-size:240px;font-weight:900;line-height:1;
+  color:rgba(240,235,227,.025);white-space:nowrap;user-select:none;pointer-events:none;
+  letter-spacing:-.02em;
+}
+.cta-inner{position:relative;z-index:1}
+.cta-pill{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:6px 18px;border-radius:99px;
+  background:rgba(200,68,42,.12);border:1px solid rgba(200,68,42,.25);
+  font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--red3);margin-bottom:28px;
+}
+.cta-h{
+  font-family:var(--serif);font-size:clamp(36px,5vw,64px);
+  font-weight:900;color:var(--fg);line-height:1.1;margin-bottom:20px;letter-spacing:-.01em;
+}
+.cta-sub{
+  font-size:16px;font-weight:300;color:var(--fg2);max-width:440px;
+  margin:0 auto 56px;line-height:1.9;
+}
+.cta-cards{display:flex;justify-content:center;gap:16px;flex-wrap:wrap;margin-bottom:36px}
+.phone-block{
+  background:var(--ink2);border:1px solid var(--line2);border-radius:16px;
+  padding:24px 36px;transition:border-color .2s,transform .2s,box-shadow .2s;
+  cursor:none;min-width:220px;
+}
+.phone-block:hover{border-color:rgba(200,68,42,.4);transform:translateY(-3px);box-shadow:0 16px 40px rgba(0,0,0,.4)}
+.pb-lbl{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--fg3);margin-bottom:8px}
+.pb-num{font-family:var(--serif);font-size:22px;font-weight:700;color:var(--fg);letter-spacing:.06em}
+.pb-sub{font-size:11px;color:var(--fg3);margin-top:6px}
+.cta-note{font-size:13px;color:var(--fg3);letter-spacing:.04em}
+
+/* ── FOOTER ─────────────────────────────────── */
+footer{
+  background:#0A0807;
+  border-top:1px solid var(--line);
+  padding:72px 5% 40px;
+}
+.ft-grid{
+  display:grid;grid-template-columns:2.2fr 1fr 1fr 1.4fr;gap:64px;
+  padding-bottom:56px;border-bottom:1px solid var(--line);margin-bottom:32px;
+}
+.ft-brand{font-family:var(--serif);font-size:20px;font-weight:700;color:var(--fg);letter-spacing:.08em;margin-bottom:8px}
+.ft-slogan{font-size:11px;color:var(--fg3);letter-spacing:.12em;margin-bottom:24px}
+.ft-about{font-size:12px;font-weight:300;color:var(--fg3);line-height:2.1}
+.ft-h{font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--fg3);margin-bottom:20px}
+.ft-links{list-style:none;display:flex;flex-direction:column;gap:11px}
+.ft-links a{font-size:13px;font-weight:300;color:var(--fg3);transition:color .2s;text-decoration:none}
+.ft-links a:hover{color:var(--fg)}
+.ft-contact-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:14px}
+.fc-ic{
+  width:28px;height:28px;border-radius:7px;background:rgba(200,68,42,.15);
+  display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;
+}
+.fc-tx{font-size:13px;font-weight:300;color:var(--fg3);line-height:1.5}
+.ft-bottom{
+  display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:12px;font-size:12px;color:var(--fg3);
+}
+.ft-bottom a{color:var(--fg3);transition:color .2s;text-decoration:none}
+.ft-bottom a:hover{color:var(--fg)}
+
+/* ── SCROLL REVEAL ──────────────────────────── */
+.sr{opacity:0;transform:translateY(32px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.sr.in{opacity:1;transform:none}
+.d1{transition-delay:.08s}.d2{transition-delay:.16s}.d3{transition-delay:.24s}.d4{transition-delay:.32s}
+
+/* ── RESPONSIVE ─────────────────────────────── */
+@media(max-width:1100px){
+  .bento{grid-template-columns:1fr 1fr}
+  .bento-card.featured{grid-row:span 1}
+  .phi-grid{grid-template-columns:1fr}
+  .ft-grid{grid-template-columns:1fr 1fr;gap:40px}
+}
+@media(max-width:768px){
+  .nav-menu,.nav-cta{display:none}
+  .ham-btn{display:flex}
+  .hero-h1{font-size:clamp(40px,12vw,72px)}
+  .hero-char{font-size:clamp(180px,40vw,320px);opacity:.6}
+  .nums-row{grid-template-columns:1fr 1fr}
+  .clients-grid{grid-template-columns:1fr 1fr}
+  .cases-grid{grid-template-columns:1fr}
+  .faq-grid{grid-template-columns:1fr}
+  .bento{grid-template-columns:1fr}
+  .cta-h{font-size:clamp(32px,8vw,52px)}
+  body{cursor:auto}
+  .cursor{display:none}
+}
+@media(max-width:480px){
+  .clients-grid{grid-template-columns:1fr 1fr}
+  .ft-grid{grid-template-columns:1fr}
+}
+
+/* ── CONTACT FORM ────────────────────────────── */
+.contact-form-wrap{
+  max-width:640px;margin:0 auto;
+  background:rgba(28,25,23,.7);
+  border:1px solid var(--line2);border-radius:24px;
+  padding:44px 48px;
+  backdrop-filter:blur(12px);
+  text-align:left;
+}
+.cf-header{margin-bottom:32px;text-align:center}
+.cf-title{font-family:var(--serif);font-size:20px;font-weight:700;color:var(--fg);margin-bottom:6px;letter-spacing:.02em}
+.cf-sub{font-size:13px;color:var(--fg3)}
+.cf-form{display:flex;flex-direction:column;gap:18px}
+.cf-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.cf-field{display:flex;flex-direction:column;gap:6px}
+.cf-label{font-size:12px;font-weight:500;color:var(--fg2);letter-spacing:.04em}
+.cf-req{color:var(--red)}
+.cf-input{
+  background:rgba(240,235,227,.05);
+  border:1px solid var(--line2);
+  border-radius:10px;
+  padding:12px 16px;
+  font-family:var(--sans);font-size:14px;color:var(--fg);
+  outline:none;
+  transition:border-color .2s,background .2s;
+  width:100%;
+  -webkit-appearance:none;
+}
+.cf-input::placeholder{color:var(--fg3)}
+.cf-input:focus{border-color:rgba(200,68,42,.5);background:rgba(240,235,227,.07)}
+.cf-input:focus::placeholder{color:transparent}
+.cf-select{cursor:pointer;color:var(--fg)}
+.cf-select option{background:#1C1917;color:var(--fg)}
+.cf-textarea{resize:vertical;min-height:100px;font-family:var(--sans)}
+.cf-actions{display:flex;flex-direction:column;align-items:center;gap:12px;margin-top:4px}
+.cf-btn{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:14px 40px;border-radius:99px;
+  background:var(--red);border:none;cursor:pointer;
+  font-family:var(--sans);font-size:15px;font-weight:500;
+  color:#fff;letter-spacing:.06em;
+  transition:background .2s,transform .2s,box-shadow .2s;
+  box-shadow:0 4px 24px rgba(200,68,42,.3);
+}
+.cf-btn:hover{background:var(--red2);transform:translateY(-2px);box-shadow:0 8px 32px rgba(200,68,42,.4)}
+.cf-btn:disabled{opacity:.6;transform:none;cursor:not-allowed}
+.cf-btn-arrow{transition:transform .2s}
+.cf-btn:hover .cf-btn-arrow{transform:translateX(3px)}
+.cf-privacy{font-size:11px;color:var(--fg3);text-align:center;max-width:340px;line-height:1.6}
+.cf-feedback{
+  padding:14px 18px;border-radius:10px;
+  font-size:13px;text-align:center;line-height:1.6;
+  display:none;
+}
+.cf-feedback.success{display:block;background:rgba(80,160,80,.12);border:1px solid rgba(80,160,80,.25);color:#7DC87D}
+.cf-feedback.error{display:block;background:rgba(200,68,42,.1);border:1px solid rgba(200,68,42,.2);color:var(--red3)}
+@media(max-width:600px){
+  .contact-form-wrap{padding:32px 24px}
+  .cf-row{grid-template-columns:1fr}
+}
+
+/* ham btn */
+.ham-btn{
+  display:none;flex-direction:column;gap:5px;cursor:pointer;
+  padding:6px;z-index:900;
+}
+.ham-btn span{display:block;width:22px;height:1.5px;background:var(--fg2);transition:.25s var(--ease2)}
+
+/* mob menu overlay */
+#mob-menu{
+  display:none;position:fixed;inset:0;z-index:700;
+  background:rgba(10,8,7,.96);backdrop-filter:blur(24px);
+  padding:80px 5% 40px;flex-direction:column;gap:0;
+}
+.mob-link{
+  display:block;padding:20px 0;
+  font-family:var(--serif);font-size:28px;font-weight:700;
+  color:var(--fg);border-bottom:1px solid var(--line);
+  letter-spacing:.04em;text-decoration:none;
+  transition:color .2s;
+}
+.mob-link:hover{color:var(--red)}
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div class="cursor" id="cur">
+  <div class="cursor-ring" id="ring" style="position:fixed;top:0;left:0"></div>
+  <div class="cursor-dot" id="dot" style="position:fixed;top:0;left:0"></div>
+</div>
+
+<!-- ══ NAV ══════════════════════════════════════ -->
+<nav id="nav">
+  <a href="#" class="nav-logo">
+    <div class="nav-logo-mark">欢</div>
+    <span class="nav-logo-text">欢喜财税</span>
+  </a>
+
+  <ul class="nav-menu">
+    <li class="nav-item">
+      <a href="#services" class="nav-link">
+        服务项目
+        <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3.5l3 3 3-3"/></svg>
+      </a>
+      <div class="nav-dropdown">
+        <div class="nav-dd-label">企业财税服务</div>
+        <a href="#services" class="nav-dd-item"><div class="nav-dd-icon">📋</div>顾问式代理记账</a>
+        <a href="#services" class="nav-dd-item"><div class="nav-dd-icon">🌏</div>出口企业财税</a>
+        <a href="#services" class="nav-dd-item"><div class="nav-dd-icon">💡</div>高新技术企业财税</a>
+        <a href="#services" class="nav-dd-item"><div class="nav-dd-icon">🔍</div>税务异常处理</a>
+        <a href="#services" class="nav-dd-item"><div class="nav-dd-icon">🏢</div>公司注册 / 注销</a>
+        <div class="nav-dd-sep"></div>
+        <div class="nav-dd-label">培训业务</div>
+        <a href="#services" class="nav-dd-item"><div class="nav-dd-icon">🎓</div>财税培训</a>
+      </div>
+    </li>
+    <li class="nav-item"><a href="#about" class="nav-link">关于我们</a></li>
+    <li class="nav-item"><a href="#clients" class="nav-link">客户类型</a></li>
+    <li class="nav-item"><a href="#cases" class="nav-link">成功案例</a></li>
+    <li class="nav-item"><a href="#faq" class="nav-link">常见问题</a></li>
+  </ul>
+
+  <a href="#contact" class="nav-cta">免费咨询</a>
+  <div class="ham-btn" id="ham" onclick="toggleMob()"><span></span><span></span><span></span></div>
+</nav>
+
+<!-- mob menu -->
+<div id="mob-menu" style="display:none;flex-direction:column">
+  <a href="#services" class="mob-link" onclick="toggleMob()">服务项目</a>
+  <a href="#about"    class="mob-link" onclick="toggleMob()">关于我们</a>
+  <a href="#clients"  class="mob-link" onclick="toggleMob()">客户类型</a>
+  <a href="#cases"    class="mob-link" onclick="toggleMob()">成功案例</a>
+  <a href="#faq"      class="mob-link" onclick="toggleMob()">常见问题</a>
+  <a href="#contact"  onclick="toggleMob()" style="display:flex;align-items:center;justify-content:center;margin-top:32px;padding:18px;background:var(--red);color:#fff;border-radius:99px;font-size:16px;font-weight:500;letter-spacing:.06em;text-decoration:none">立即免费咨询</a>
+</div>
+
+<!-- ══ HERO ══════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+  <div class="hero-char">喜</div>
+
+  <div class="hero-content">
+    <div class="hero-kicker">
+      <span class="hero-kicker-dot"></span>
+      广州专业顾问式财税服务机构
+    </div>
+
+    <h1 class="hero-h1">
+      创业无忧<br>
+      <span class="line2">欢喜相伴</span>
+    </h1>
+
+    <div class="hero-bottom">
+      <p class="hero-desc">
+        以<strong>代理记账</strong>为基础交付，以<strong>顾问式支持</strong>为核心差异——<br>
+        专注制造业、出口企业、跨境电商与高新技术企业的财税服务机构。
+      </p>
+      <div class="hero-actions">
+        <a href="#contact" class="hero-btn-main">立即免费咨询</a>
+        <a href="#services" class="hero-btn-ghost">了解服务 →</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-scroll">
+    <span class="scroll-text">Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ══ TICKER ════════════════════════════════════ -->
+<div class="ticker">
+  <div class="ticker-track" id="tk">
+    <div class="ticker-item">代理记账<span class="ticker-sep">◆</span></div>
+    <div class="ticker-item">出口退税<span class="ticker-sep">◆</span></div>
+    <div class="ticker-item">高新技术企业<span class="ticker-sep">◆</span></div>
+    <div class="ticker-item">研发费用归集<span class="ticker-sep">◆</span></div>
+    <div class="ticker-item">税务异常处理<span class="ticker-sep">◆</span></div>
+    <div class="ticker-item">跨境电商财税<span class="ticker-sep">◆</span></div>
+    <div class="ticker-item">公司注册 · 注销<span class="ticker-sep">◆</span></div>
+    <div class="ticker-item">香港公司架构<span class="ticker-sep">◆</span></div>
+    <div class="ticker-item">会计转型培训<span class="ticker-sep">◆</span></div>
+    <div class="ticker-item">花都 · 从化 · 清远<span class="ticker-sep">◆</span></div>
+    <div class="ticker-item">创业无忧，欢喜相伴<span class="ticker-sep">◆</span></div>
+    <!-- dupe -->
+    <div class="ticker-item">代理记账<span class="ticker-sep">◆</span></div>
+    <div class="ticker-item">出口退税<span class="ticker-sep">◆</span></div>
+    <div class="ticker-item">高新技术企业<span class="ticker-sep">◆</span></div>
+    <div class="ticker-item">研发费用归集<span class="ticker-sep">◆</span></div>
+    <div class="ticker-item">税务异常处理<span class="ticker-sep">◆</span></div>
+    <div class="ticker-item">跨境电商财税<span class="ticker-sep">◆</span></div>
+    <div class="ticker-item">公司注册 · 注销<span class="ticker-sep">◆</span></div>
+    <div class="ticker-item">香港公司架构<span class="ticker-sep">◆</span></div>
+    <div class="ticker-item">会计转型培训<span class="ticker-sep">◆</span></div>
+    <div class="ticker-item">花都 · 从化 · 清远<span class="ticker-sep">◆</span></div>
+    <div class="ticker-item">创业无忧，欢喜相伴<span class="ticker-sep">◆</span></div>
+  </div>
+</div>
+
+<!-- ══ SERVICES ══════════════════════════════════ -->
+<section class="section section-warm" id="services">
+  <div class="section-head sr">
+    <div class="eyebrow">服务项目</div>
+    <h2 class="sh">不只是做账报税<br>而是<em>支持企业发展</em>的专业底盘</h2>
+    <p class="sd">三层服务结构：基础交付 + 顾问支持 + 能力培训，匹配企业不同阶段的真实需求。</p>
+  </div>
+
+  <div class="bento">
+    <div class="bento-card featured sr">
+      <div class="bento-char">出</div>
+      <div class="bc-num">01 — 核心服务</div>
+      <div class="bc-icon">🌏</div>
+      <div class="bc-title">出口企业财税</div>
+      <div class="bc-desc">真正懂货、懂款、懂税、懂主体设计。帮助出口企业建立清晰合规的财税体系，从前端链路搭建到退税申报，全程深度介入。<br><br>懂出口链路的财税机构，在广州并不多见——欢喜财税正是其中之一。</div>
+      <div class="bc-tags">
+        <span class="bc-tag">出口退税</span>
+        <span class="bc-tag">1039模式</span>
+        <span class="bc-tag">跨境合规</span>
+        <span class="bc-tag">回款路径</span>
+        <span class="bc-tag">链路梳理</span>
+      </div>
+      <div class="bc-arrow">→</div>
+    </div>
+
+    <div class="bento-card sr d1">
+      <div class="bc-num">02</div>
+      <div class="bc-icon">📋</div>
+      <div class="bc-title">顾问式代理记账</div>
+      <div class="bc-desc">不只交付账目，更关注企业财税健康与经营风险，提供持续顾问支持，让老板真正安心。</div>
+      <div class="bc-tags"><span class="bc-tag">月度记账</span><span class="bc-tag">税务申报</span><span class="bc-tag">风险预警</span><span class="bc-tag">顾问咨询</span></div>
+      <div class="bc-arrow">→</div>
+    </div>
+
+    <div class="bento-card sr d2">
+      <div class="bc-num">03</div>
+      <div class="bc-icon">💡</div>
+      <div class="bc-title">高新技术企业财税</div>
+      <div class="bc-desc">研发费用归集、高新认定财税合规、加计扣除申请，帮科技企业合规享受政策红利。</div>
+      <div class="bc-tags"><span class="bc-tag">研发归集</span><span class="bc-tag">高新认定</span><span class="bc-tag">加计扣除</span></div>
+      <div class="bc-arrow">→</div>
+    </div>
+
+    <div class="bento-card sr">
+      <div class="bc-num">04</div>
+      <div class="bc-icon">🔍</div>
+      <div class="bc-title">税务异常处理</div>
+      <div class="bc-desc">快速识别问题，给出解决路径，关键时刻稳住阵脚。平时看不出差距，出事时才知道谁真的行。</div>
+      <div class="bc-tags"><span class="bc-tag">异常解除</span><span class="bc-tag">稽查应对</span><span class="bc-tag">历史账务</span></div>
+      <div class="bc-arrow">→</div>
+    </div>
+
+    <div class="bento-card sr d1">
+      <div class="bc-num">05</div>
+      <div class="bc-icon">🏢</div>
+      <div class="bc-title">公司注册 / 注销</div>
+      <div class="bc-desc">内资公司、香港公司、境外架构全程代办，注册时同步提供财税规划，让创业少走弯路。</div>
+      <div class="bc-tags"><span class="bc-tag">内资注册</span><span class="bc-tag">香港公司</span><span class="bc-tag">工商变更</span><span class="bc-tag">公司注销</span></div>
+      <div class="bc-arrow">→</div>
+    </div>
+
+    <div class="bento-card sr d2">
+      <div class="bc-num">06</div>
+      <div class="bc-icon">🎓</div>
+      <div class="bc-title">财税培训</div>
+      <div class="bc-desc">偏实战、偏上手的会计转型培训与出口实操培训，帮财务人员和老板真正提升实战能力。</div>
+      <div class="bc-tags"><span class="bc-tag">会计转型</span><span class="bc-tag">出口培训</span><span class="bc-tag">老板认知课</span></div>
+      <div class="bc-arrow">→</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ NUMBERS ════════════════════════════════════ -->
+<div class="section" style="padding-top:0;padding-bottom:0;background:#141210">
+  <div class="nums-row sr">
+    <div class="num-cell">
+      <div class="num-n" data-target="15" data-suffix="年+">15年+</div>
+      <div class="num-l">创始人财税从业经验<br>2009年正式入行</div>
+    </div>
+    <div class="num-cell">
+      <div class="num-n" data-target="30" data-suffix="家">30家</div>
+      <div class="num-l">服务过年营收<br>过亿规模企业</div>
+    </div>
+    <div class="num-cell">
+      <div class="num-n" data-target="100" data-suffix="+" data-prefix="">100+</div>
+      <div class="num-l">累计服务<br>出口企业</div>
+    </div>
+    <div class="num-cell">
+      <div class="num-n" data-lt="1">&lt;5%</div>
+      <div class="num-l">年度客户流失率<br>长期合作是核心</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PHILOSOPHY ═════════════════════════════════ -->
+<section class="section section-warm" id="about">
+  <div class="section-head sr">
+    <div class="eyebrow">关于我们</div>
+    <h2 class="sh">顾问式服务<br>让老板<em>真正安心</em></h2>
+  </div>
+
+  <div class="phi-grid">
+    <div class="phi-items">
+      <div class="phi-item sr">
+        <div class="phi-idx">01</div>
+        <div>
+          <div class="phi-t">不只做账，更关注企业发展</div>
+          <div class="phi-b">财税是支持企业发展的专业底盘，而不只是完成记账报税动作。我们站在经营视角看问题，帮老板提前看见风险、理清方向。</div>
+        </div>
+      </div>
+      <div class="phi-item sr d1">
+        <div class="phi-idx">02</div>
+        <div>
+          <div class="phi-t">出口链路，全程真正理解</div>
+          <div class="phi-b">懂货、懂款、懂税、懂主体设计，能把出口财税链路从前到后讲清楚，而不只是处理申报动作。</div>
+        </div>
+      </div>
+      <div class="phi-item sr d2">
+        <div class="phi-idx">03</div>
+        <div>
+          <div class="phi-t">关键时刻最稳，出事时能托住</div>
+          <div class="phi-b">税局检查、账务混乱、历史问题——快速看出问题、给出路径、稳住情绪。这是平时看不见的核心价值。</div>
+        </div>
+      </div>
+      <div class="phi-item sr d3">
+        <div class="phi-idx">04</div>
+        <div>
+          <div class="phi-t">讲得明白，让老板真的懂</div>
+          <div class="phi-b">专业问题用人话说清楚。客户的信任不来自术语堆砌，而来自真切感受到：这个人说的我能听懂，我放心。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sr d2">
+      <div class="phi-quote">
+        <span class="phi-qm">"</span>
+        <div class="phi-qt">中小企业也可以用更可控的成本，获得接近<em>高阶财务经理级别</em>的支持。</div>
+        <div class="phi-qs">创业过程中，老板真正需要的不只是一个做账员，而是一个能解释、能规划、能提醒风险、<em>能让人安心的专业伙伴</em>。</div>
+        <div class="phi-auth">
+          <div class="phi-av">郝</div>
+          <div>
+            <div class="phi-aname">郝总 · 创始人</div>
+            <div class="phi-arole">2009年入行 · 15年财税从业经验</div>
+          </div>
+        </div>
+      </div>
+      <div class="tl">
+        <div class="tl-row"><div class="tl-y">2009</div><div class="tl-dot"></div><div class="tl-t">正式进入财税行业，开始积累实战经验</div></div>
+        <div class="tl-row"><div class="tl-y">近年</div><div class="tl-dot"></div><div class="tl-t">形成出口财税与高新研发费用两大核心壁垒</div></div>
+        <div class="tl-row"><div class="tl-y">2023</div><div class="tl-dot"></div><div class="tl-t">广州欢喜财税服务有限公司正式注册成立</div></div>
+        <div class="tl-row"><div class="tl-y">现在</div><div class="tl-dot"></div><div class="tl-t">服务过亿企业30家，出口企业100+，持续深耕品牌影响力</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CLIENTS ════════════════════════════════════ -->
+<section class="section" id="clients">
+  <div class="section-head sr">
+    <div class="eyebrow">客户类型</div>
+    <h2 class="sh">重点服务<em>四类客户</em></h2>
+    <p class="sd">有经营复杂度、有产业链属性、有成长需求的企业，是欢喜财税最擅长服务的类型。</p>
+  </div>
+  <div class="clients-grid">
+    <div class="client-tile sr"><span class="c-em">🏭</span><div class="c-name">制造业企业</div><div class="c-desc">成本核算、供应链财税、出口合规，财税复杂度高，需要真正懂业务的团队长期跟进</div></div>
+    <div class="client-tile sr d1"><span class="c-em">🚢</span><div class="c-name">出口 / 贸易企业</div><div class="c-desc">退税申报、出口模式、回款合规，从链路理解到账务处理，全程深度支持</div></div>
+    <div class="client-tile sr d2"><span class="c-em">💻</span><div class="c-name">跨境电商卖家</div><div class="c-desc">平台资金合规回流、主体架构、第三方收款合规路径，把看不清的链路说明白</div></div>
+    <div class="client-tile sr d3"><span class="c-em">🔬</span><div class="c-name">高新技术企业</div><div class="c-desc">研发费用归集、高新认定、财税合规，帮企业在合规前提下充分用好政策红利</div></div>
+  </div>
+</section>
+
+<!-- ══ CASES ══════════════════════════════════════ -->
+<section class="section section-warm" id="cases">
+  <div class="section-head sr">
+    <div class="eyebrow">成功案例</div>
+    <h2 class="sh">关键时刻<em>见真章</em></h2>
+    <p class="sd">真实遇到的问题，真实的处理方式。每一个案例都是欢喜财税能力的具体体现。</p>
+  </div>
+  <div class="cases-grid">
+    <div class="case-card sr"><div class="case-pill">注册升级</div><div class="case-t">只来办执照，最终升级为深度财税合作</div><div class="case-b">客户原本只想注册公司，沟通后意识到后续经营的财税链路同样重要。欢喜没有做完低价业务就了事，而是帮客户建立更完整的财税认知框架。</div><div class="case-ins">不是把低价业务做完，而是把客户往更完整的理解上带。</div></div>
+    <div class="case-card sr d1"><div class="case-pill">出口合规</div><div class="case-t">从模糊操作到清晰合规路径的长期陪跑</div><div class="case-b">客户原本存在不规范做法，通过长期沟通、培训、方案对比和架构梳理，逐步转向更清晰合规的经营路径，规避了潜在的重大财税风险。</div><div class="case-ins">长周期顾问价值的体现：陪着企业一步步走清晰。</div></div>
+    <div class="case-card sr d2"><div class="case-pill">异常处理</div><div class="case-t">税局检查，原服务商处理不了，欢喜承接</div><div class="case-b">客户因税局检查陷入焦虑，原代账公司束手无策。欢喜快速识别问题、给出解决思路、稳住情绪，最终帮助企业顺利解决。</div><div class="case-ins">低价代账平时看不出差别，出事时才知道差距有多大。</div></div>
+    <div class="case-card sr"><div class="case-pill">制造业</div><div class="case-t">检查之后，从粗放管理走向规范化体系</div><div class="case-b">客户经历税务检查后开始重视财税规范。欢喜从成本结构、税务成本、软件、人工、架构等维度系统梳理，帮助企业建立更健康的财税体系。</div><div class="case-ins">出过一次问题，才知道财税服务不只是做账。</div></div>
+    <div class="case-card sr d1"><div class="case-pill">信任建立</div><div class="case-t">几十家公司注销，透明报价赢得信任</div><div class="case-b">客户面临大量公司注销问题，低价选项很多但不放心。欢喜通过透明讲流程、讲成本、讲风险，在竞争中建立信任，最终全程承接。</div><div class="case-ins">不回避价格，不回避流程，透明本身就是竞争力。</div></div>
+    <div class="case-card sr d2"><div class="case-pill">政策红利</div><div class="case-t">帮企业从零建立研发费用归集体系</div><div class="case-b">客户有研发业务但归集混乱，无法有效享受税收优惠。欢喜从项目管理、费用分类到凭证规范整体梳理，帮企业合规拿到加计扣除政策红利。</div><div class="case-ins">政策红利就在那里，关键是有没有专业人帮你合规拿到。</div></div>
+  </div>
+</section>
+
+<!-- ══ FAQ ════════════════════════════════════════ -->
+<section class="section" id="faq">
+  <div class="section-head sr">
+    <div class="eyebrow">常见问题</div>
+    <h2 class="sh">直接问<em>直接答</em></h2>
+    <p class="sd">真实问题，不绕弯子的回答。</p>
+  </div>
+  <div class="faq-grid">
+    <div class="faq-card sr"><div class="faq-q"><span class="faq-badge">Q</span>和普通代账公司有什么区别？</div><div class="faq-a">普通代账解决"账做没做、税报没报"，欢喜更强调顾问式支持——判断、提醒、解释，出问题时能稳住。制造业、出口、高新等复杂场景下，差距会非常明显。</div></div>
+    <div class="faq-card sr d1"><div class="faq-q"><span class="faq-badge">Q</span>比低价代账贵，值吗？</div><div class="faq-a">服务逻辑不同。低价代账主要做基础交付，欢喜更强调顾问式支持和复杂问题处理。关键是看你需要的是"便宜做账"还是"有人帮你把事做稳"。</div></div>
+    <div class="faq-card sr"><div class="faq-q"><span class="faq-badge">Q</span>刚注册的小公司也适合吗？</div><div class="faq-a">完全适合。注册公司是我们的重要业务。我们不只把执照办下来，还会结合你的经营情况把后续财税规划说清楚，让你从一开始少走弯路。</div></div>
+    <div class="faq-card sr d1"><div class="faq-q"><span class="faq-badge">Q</span>出口退税怎么做，和别家有什么不同？</div><div class="faq-a">从了解供应链和销售渠道开始，先培训、再跟首次出口、再日常支持。不只处理申报，而是帮你把体系从前端搭好，货、款、资料全链路梳理清楚。</div></div>
+    <div class="faq-card sr"><div class="faq-q"><span class="faq-badge">Q</span>遇到税局检查，能帮忙吗？</div><div class="faq-a">可以，这是最能体现专业价值的场景。我们会快速识别问题，给出解决思路和处理路径。欢喜服务过多个在关键节点遇到问题后转来的客户。</div></div>
+    <div class="faq-card sr d1"><div class="faq-q"><span class="faq-badge">Q</span>主要服务哪些区域？</div><div class="faq-a">广州全区域均可服务，目前更集中的区域包括花都区、从化区和清远市清城区。不管在哪个区，都欢迎先联系我们聊一聊。</div></div>
+    <div class="faq-card sr"><div class="faq-q"><span class="faq-badge">Q</span>跨境电商资金怎么合规回来？</div><div class="faq-a">需结合平台类型、主体架构、收款方式综合判断，没有通用答案。我们根据你的实际情况梳理合规路径，欢迎直接联系咨询。</div></div>
+    <div class="faq-card sr d1"><div class="faq-q"><span class="faq-badge">Q</span>做同行培训，不怕教会竞争对手？</div><div class="faq-a">核心竞争力不在"捂着不教"，而在持续学习和升级。培训本身是一种能力输出，反过来强化欢喜的专业影响力。服务做得好，才有人想跟着学。</div></div>
+  </div>
+</section>
+
+<!-- ══ CTA ════════════════════════════════════════ -->
+<div class="cta-wrap" id="contact">
+  <div class="cta-glow"></div>
+  <div class="cta-grid-bg"></div>
+  <div class="cta-wm">欢喜财税</div>
+  <div class="cta-inner sr">
+    <div class="cta-pill">📞 随时联系 · 免费咨询</div>
+    <h2 class="cta-h">聊聊你的<br>财税需求</h2>
+    <p class="cta-sub">注册公司、代理记账、出口财税、税务异常——不管什么问题，都可以先联系我们，不收咨询费。</p>
+    <div class="cta-cards">
+      <div class="phone-block">
+        <div class="pb-lbl">联系电话一</div>
+        <div class="pb-num">134-2363-5335</div>
+        <div class="pb-sub">微信同号 · 随时可联系</div>
+      </div>
+      <div class="phone-block">
+        <div class="pb-lbl">联系电话二</div>
+        <div class="pb-num">134-1806-2554</div>
+        <div class="pb-sub">微信同号 · 随时可联系</div>
+      </div>
+    </div>
+    <p class="cta-note" style="margin-bottom:48px">广州市花都区 · 重点服务花都 / 从化 / 清远及广州全区域</p>
+
+    <!-- Contact Form -->
+    <div class="contact-form-wrap sr">
+      <div class="cf-header">
+        <div class="cf-title">留下信息，我们主动联系你</div>
+        <div class="cf-sub">填写后通常在1个工作日内回复</div>
+      </div>
+      <form id="contactForm" class="cf-form" novalidate>
+        <div class="cf-row">
+          <div class="cf-field">
+            <label class="cf-label" for="cf-name">您的姓名 <span class="cf-req">*</span></label>
+            <input class="cf-input" type="text" id="cf-name" name="name" placeholder="请输入您的姓名" required>
+          </div>
+          <div class="cf-field">
+            <label class="cf-label" for="cf-phone">联系电话 <span class="cf-req">*</span></label>
+            <input class="cf-input" type="tel" id="cf-phone" name="phone" placeholder="请输入手机号码" required>
+          </div>
+        </div>
+        <div class="cf-field">
+          <label class="cf-label" for="cf-type">咨询类型</label>
+          <select class="cf-input cf-select" id="cf-type" name="type">
+            <option value="">请选择咨询类型（可选）</option>
+            <option value="代理记账">顾问式代理记账</option>
+            <option value="出口财税">出口企业财税</option>
+            <option value="公司注册">公司注册 / 注销</option>
+            <option value="高新技术">高新技术企业财税</option>
+            <option value="税务异常">税务异常处理</option>
+            <option value="财税培训">财税培训</option>
+            <option value="其他">其他问题</option>
+          </select>
+        </div>
+        <div class="cf-field">
+          <label class="cf-label" for="cf-msg">简单描述您的情况</label>
+          <textarea class="cf-input cf-textarea" id="cf-msg" name="message" placeholder="例如：刚注册了公司，需要代理记账服务；或者遇到了税务异常，想咨询处理方式……（选填）" rows="4"></textarea>
+        </div>
+        <div class="cf-actions">
+          <button type="submit" class="cf-btn" id="cf-submit">
+            <span class="cf-btn-text">提交咨询</span>
+            <span class="cf-btn-arrow">→</span>
+          </button>
+          <div class="cf-privacy">提交即表示您同意我们通过电话或微信与您联系，我们承诺不会泄露您的信息</div>
+        </div>
+        <div class="cf-feedback" id="cf-feedback"></div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ══ FOOTER ══════════════════════════════════════ -->
+<footer>
+  <div class="ft-grid">
+    <div>
+      <div class="ft-brand">欢喜财税</div>
+      <div class="ft-slogan">创业无忧，欢喜相伴</div>
+      <div class="ft-about">广州欢喜财税服务有限公司<br>公司成立：2023年5月<br>创始人从业：2009年至今<br>服务区域：广州全区域<br>花都 · 从化 · 清远 · 广州各区</div>
+    </div>
+    <div>
+      <div class="ft-h">服务项目</div>
+      <ul class="ft-links">
+        <li><a href="#services">顾问式代理记账</a></li>
+        <li><a href="#services">出口企业财税</a></li>
+        <li><a href="#services">公司注册 / 注销</a></li>
+        <li><a href="#services">高新技术企业</a></li>
+        <li><a href="#services">税务异常处理</a></li>
+        <li><a href="#services">财税培训</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="ft-h">了解更多</div>
+      <ul class="ft-links">
+        <li><a href="#about">关于我们</a></li>
+        <li><a href="#clients">客户类型</a></li>
+        <li><a href="#cases">成功案例</a></li>
+        <li><a href="#faq">常见问题</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="ft-h">联系我们</div>
+      <div class="ft-contact-row"><div class="fc-ic">📞</div><div class="fc-tx">134-2363-5335<br><span style="font-size:11px;opacity:.5">微信同号</span></div></div>
+      <div class="ft-contact-row"><div class="fc-ic">📱</div><div class="fc-tx">134-1806-2554<br><span style="font-size:11px;opacity:.5">微信同号</span></div></div>
+      <div class="ft-contact-row"><div class="fc-ic">🎵</div><div class="fc-tx">抖音：广州欢喜财税caishuiyuan</div></div>
+      <div class="ft-contact-row"><div class="fc-ic">📕</div><div class="fc-tx">小红书：广州欢喜代理记账</div></div>
+    </div>
+  </div>
+  <div class="ft-bottom">
+    <span>© 2024 广州欢喜财税服务有限公司 · <a href="#">粤ICP备XXXXXX号</a></span>
+    <span>花都 · 从化 · 清远 · 广州全区域专业财税服务</span>
+  </div>
+</footer>
+
+<script>
+// ── custom cursor
+const ring=document.getElementById('ring'),dot=document.getElementById('dot')
+let mx=0,my=0,rx=0,ry=0
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px'})
+;(function loop(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop)})()
+document.querySelectorAll('a,button,.bento-card,.client-tile,.case-card,.faq-card,.phone-block,.num-cell').forEach(el=>{
+  el.addEventListener('mouseenter',()=>document.getElementById('cur').classList.add('cursor-hover'))
+  el.addEventListener('mouseleave',()=>document.getElementById('cur').classList.remove('cursor-hover'))
+})
+
+// ── nav scroll
+const nav=document.getElementById('nav')
+window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>30),{passive:true})
+
+// ── mobile menu
+function toggleMob(){
+  const m=document.getElementById('mob-menu')
+  const open=m.style.display==='flex'
+  m.style.display=open?'none':'flex'
+  document.body.style.overflow=open?'':'hidden'
+}
+
+// ── smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    const t=document.querySelector(a.getAttribute('href'))
+    if(!t)return;e.preventDefault()
+    window.scrollTo({top:t.getBoundingClientRect().top+scrollY-68,behavior:'smooth'})
+  })
+})
+
+// ── scroll reveal
+const io=new IntersectionObserver(es=>{
+  es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})
+},{threshold:.08,rootMargin:'0px 0px -40px 0px'})
+document.querySelectorAll('.sr').forEach(el=>io.observe(el))
+
+// ── number counter
+function runCount(el){
+  if(el.dataset.done)return;el.dataset.done=1
+  if(el.dataset.lt){return} // keep <5%
+  const target=+el.dataset.target
+  const suffix=el.dataset.suffix||''
+  const dur=1600,start=performance.now()
+  ;(function frame(now){
+    const p=Math.min((now-start)/dur,1)
+    const e=1-Math.pow(1-p,4)
+    el.textContent=Math.round(e*target)+suffix
+    if(p<1)requestAnimationFrame(frame)
+  })(start)
+}
+const cio=new IntersectionObserver(es=>{
+  es.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.querySelectorAll('[data-target]').forEach(runCount)
+      cio.unobserve(e.target)
+    }
+  })
+},{threshold:.5})
+document.querySelectorAll('.nums-row').forEach(el=>cio.observe(el))
+
+// ── contact form
+const form=document.getElementById('contactForm')
+const feedback=document.getElementById('cf-feedback')
+const submitBtn=document.getElementById('cf-submit')
+if(form){
+  form.addEventListener('submit',async e=>{
+    e.preventDefault()
+    const name=form.querySelector('#cf-name').value.trim()
+    const phone=form.querySelector('#cf-phone').value.trim()
+    if(!name||!phone){
+      feedback.className='cf-feedback error'
+      feedback.textContent='请填写姓名和联系电话'
+      return
+    }
+    if(!/^1[3-9]\d{9}$/.test(phone.replace(/-/g,''))){
+      feedback.className='cf-feedback error'
+      feedback.textContent='请输入正确的手机号码'
+      return
+    }
+    submitBtn.disabled=true
+    submitBtn.querySelector('.cf-btn-text').textContent='提交中...'
+    feedback.className='cf-feedback'
+    try{
+      const res=await fetch('/api/contact',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          name,phone,
+          type:form.querySelector('#cf-type').value,
+          message:form.querySelector('#cf-msg').value.trim()
+        })
+      })
+      const data=await res.json()
+      if(res.ok&&data.success){
+        feedback.className='cf-feedback success'
+        feedback.textContent='✓ 提交成功！我们会在1个工作日内通过电话或微信联系您。'
+        form.reset()
+      } else {
+        throw new Error(data.message||'提交失败')
+      }
+    }catch(err){
+      feedback.className='cf-feedback error'
+      feedback.textContent='提交遇到问题，请直接拨打：134-2363-5335'
+    }finally{
+      submitBtn.disabled=false
+      submitBtn.querySelector('.cf-btn-text').textContent='提交咨询'
+    }
+  })
+}
+</script>
+</body>
+</html>
